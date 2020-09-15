@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import json
 import wikipedia
 from apiclient.discovery import build
+import discord
 
 
 
@@ -24,20 +25,19 @@ bot = commands.Bot(command_prefix='!')
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
-newUserMessage = "Welcome To Our Server We created it with Maggi Masala and Chilli Flakes and mods are not gay"
+newUserMessage = "Welcome To Our Server We created it with Maggi Masala and Chilli Flakes.Thanks for joining,we are still new and improving"
 
-@bot.command
+@bot.event
 async def on_member_join(member):
-    print("Recognised that a member called " + member.name + " joined")
-    await ctx.send(newUserMessage)
-    print("Sent message to " + member.name)
+    await member.create_dm()
+    await member.dm_channel.send(f'Hi {member.name}, {newUserMessage}!')
 
 @bot.command(name='hey',help='gives intro')
 async def hey(ctx):
-    await ctx.send("Hey,I am Bjarte.I was created by @unworld.I amm his first test project.I can do Google and Wiki Searches and some fun stuff too")
+    owner_name='@unworld'
+    await ctx.send(f'Hey,I am Bjarte.I was created by {owner_name}.I amm his first test project.I can do Google and Wiki Searches and some fun stuff too')
     await ctx.send("For more Info on commands type '!help'")
     
-
 
 @bot.command(name='googleit', help ='Does a Google search')
 async def Search(ctx,search : str):
@@ -46,15 +46,13 @@ async def Search(ctx,search : str):
     result = resource.list(q=search, cx='5b643544464eed75a').execute()
     count = 0
     for item in result['items']:
-        if count<=5:
+        if count<=3:
             await ctx.send(item['title'])
             await ctx.send(item['link'])
             count+=1
         else:
             break
     
-
-
 @bot.command(name='wiki',help='does a wikipedia search')
 async def wiki(ctx,search :str):
     query = wikipedia.page(search)
@@ -82,7 +80,7 @@ async def nine_nine(ctx):
         (
             'Cool. Cool cool cool cool cool cool cool, '
             'no doubt no doubt no doubt no doubt.'
-        ),
+        ),'NOINE NOINE!'
     ]
 
     response = random.choice(brooklyn_99_quotes)
@@ -94,6 +92,23 @@ async def nine_nine(ctx):
 async def six_nine(ctx):
     response = 'nice mate'
     await ctx.send(response)
-    await ctx.send('we are not a NSFW channel')
 
+
+@bot.command(name='fact',help='throws a random fact')
+async def fact(ctx):
+    facts = ['Babies have around 100 more bones than adults','The Eiffel Tower can be 15 cm taller during the summer','20% of Earth’s oxygen is produced by the Amazon rainforest',
+                'A teaspoonful of neutron star would weigh 6 billion tons','Hawaii moves 7.5cm closer to Alaska every year',
+             'Chalk is made from trillions of microscopic plankton fossils',' If you took out all the empty space in our atoms, the human race could fit in the volume of a sugar cube',
+             'Venus is the only planet to spin clockwise',
+             ]
+    response = random.choice(facts)
+    await ctx.send(response)
+
+@bot.command(name='sad',help='why you make me sad')
+async def sad(ctx):
+    response='http://gph.is/1L4UI0B'
+    await ctx.send(response)
+    
+    
+    
 bot.run(TOKEN)
