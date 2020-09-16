@@ -30,18 +30,19 @@ newUserMessage = "Welcome To Our Server We created it with Maggi Masala and Chil
 @bot.event
 async def on_member_join(member):
     await member.create_dm()
-    await member.dm_channel.send(f'Hi {member.name}, {newUserMessage}!')
+    await member.dm_channel.send(f'Hi {member.name}, {newUserMessage}!')\
 
 @bot.command(name='hey',help='gives intro')
 async def hey(ctx):
     owner_name='@unworld'
-    await ctx.send(f'Hey,I am Bjarte.I was created by {owner_name}.I amm his first test project.I can do Google and Wiki Searches and some fun stuff too')
+    await ctx.send(f'Hey,I am Bjarte.I was created by {owner_name}.I am his first test project.I can do Google and Wiki Searches and some fun stuff too')
     await ctx.send("For more Info on commands type '!help'")
     
 
 @bot.command(name='googleit', help ='Does a Google search')
-async def Search(ctx,search : str):
-
+async def Search(ctx,*args):
+    
+    search = ''.join(args).replace('',' ')
     resource = build("customsearch",'v1', developerKey=api_key).cse()
     result = resource.list(q=search, cx='5b643544464eed75a').execute()
     count = 0
@@ -54,7 +55,8 @@ async def Search(ctx,search : str):
             break
     
 @bot.command(name='wiki',help='does a wikipedia search')
-async def wiki(ctx,search :str):
+async def wiki(ctx,*args):
+    search=''.join(args)
     query = wikipedia.page(search)
     response = query.content
     URLresponse = query.url
@@ -108,7 +110,12 @@ async def fact(ctx):
 async def sad(ctx):
     response='http://gph.is/1L4UI0B'
     await ctx.send(response)
-    
+
+@bot.command(name='happy',help='me is happy')
+async def sad(ctx):
+    response='http://gph.is/YBDNpx'
+    await ctx.send(response)
+
     
     
 bot.run(TOKEN)
